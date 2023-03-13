@@ -24,12 +24,8 @@ const appointmentSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        default: 'pending'
-    },
-    time: {
-        type: String,
-        required: true
-    },
+        default: 'success'
+    }
 },
     {
         timestamps: true

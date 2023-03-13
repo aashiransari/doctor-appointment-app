@@ -174,20 +174,14 @@ const deleteAllNotificationConroller = async (req, res) => {
 
 const checkAvailabilityControlller = async (req, res) => {
     try {
-        const appointment = await appointmentModel.find({ doctorId: req.body.doctorId, date: req.body.date, time: req.body.time })
+        const appointment = await appointmentModel.find({ doctorId: req.body.doctorId, date: req.body.date })
+        const doctor = await doctorModel.findOne({ _id: req.body.doctorId });
+        const dailyAppointment = doctor.dailyappointment;
 
-        // const fromTime = moment(req.body.time, 'HH:mm').subtract(1, 'hours');
-        // const toTime = moment(req.body.time, 'HH:mm').add(1, 'hours');
-        // const appointment = await appointmentModel.find({
-        //     doctorId: req.body.doctorId, date: req.body.date,
-        //     time: {
-        //         $gte: fromTime, $lte: toTime
-        //     },
-        // });
-        if (appointment.length > 0) {
+        if (dailyAppointment == appointment.length) {
             return res.status(200).send({
                 success: false,
-                message: "Appointment not available"
+                message: "Appointment not available for today"
             })
         } else {
             res.status(201).send({
@@ -206,14 +200,14 @@ const checkAvailabilityControlller = async (req, res) => {
 
 const bookAppointmentController = async (req, res) => {
     try {
-        const appointmentExists = await appointmentModel.find({ doctorId: req.body.doctorId, date: req.body.date, time: req.body.time })
-        if (appointmentExists.length > 0) {
+        const appointmentExists = await appointmentModel.find({ doctorId: req.body.doctorId, date: req.body.date })
+        const doctor = await doctorModel.findOne({ _id: req.body.doctorId });
+        if (appointmentExists.length == doctor.dailyappointment) {
             return res.status(200).send({
                 success: false,
-                message: "Appointment not available"
+                message: "Appointment not available for Today"
             })
         }
-        req.body.status = "pending";
         const appointment = new appointmentModel(req.body);
         await appointment.save();
         const user = await userModel.findOne({ _id: req.body.doctorInfo.userId });
