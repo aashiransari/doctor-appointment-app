@@ -1,5 +1,5 @@
 const express = require('express');
-const { LoginController, RegisterController, AuthController, ApplyDoctorController, getAllNotificationController, deleteAllNotificationConroller, bookAppointmentController, checkAvailabilityControlller, getAllUserAppointmentsController } = require('../controllers/userCtrl');
+const { LoginController, RegisterController, AuthController, ApplyDoctorController, getAllNotificationController, deleteAllNotificationConroller, bookAppointmentController, checkAvailabilityControlller, getAllUserAppointmentsController, UpdateController } = require('../controllers/userCtrl');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // ROUTER OBJECT
@@ -11,6 +11,9 @@ router.post('/login', LoginController)
 
 // REGISTER || POST
 router.post('/register', RegisterController)
+
+// UPDATE PROFILE || POST
+router.post('/userProfileUpdate', authMiddleware, UpdateController)
 
 // AUTH USER || POST
 router.post('/getUserData', authMiddleware, AuthController)

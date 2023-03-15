@@ -7,7 +7,7 @@ const JWT = require('jsonwebtoken');
 const RegisterController = async (req, res) => {
     try {
         const existingUser = await userModel.findOne({ email: req.body.email });
-        console.log(existingUser);
+        // console.log(existingUser);
         if (existingUser) {
             return res.status(200).send({
                 success: false,
@@ -52,6 +52,7 @@ const LoginController = async (req, res) => {
         res.status(201).send({
             message: "Login Successful",
             success: true,
+            data: user,
             token,
         })
     } catch (error) {
@@ -61,10 +62,57 @@ const LoginController = async (req, res) => {
     }
 }
 
+const UpdateController = async (req, res) => {
+    try {
+        const password = req.body.password;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        req.body.password = hashedPassword;
+
+        const user = await userModel.findById(req.body.userId);
+        if (user) {
+            user.firstName = req.body.firstName || user.firstName;
+            user.lastName = req.body.lastName || user.lastName;
+            user.password = req.body.password || user.password;
+            user.contact = req.body.contact || user.contact;
+
+            const updatedUser = user.save();
+            res.status(201).send({
+                success: true,
+                message: "Profile Update Success",
+                data: updatedUser
+            })
+        }
+        // await userModel.findByIdAndUpdate(req.body.userId, {
+        //     $set: {
+        //         firstName: req.body.firstName,
+        //         lastName: req.body.lastName,
+        //         password: req.body.password || user.password,
+        //         contact: req.body.contact
+        //     },
+        //     new: true
+        // });
+        // const updatedUser = await user.save()
+        // res.status(201).send({
+        //     success: true,
+        //     message: "Your Details Updated",
+        //     data: updatedUser
+        // })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: "Error in updating details",
+            error
+        })
+    }
+}
+
+
 const AuthController = async (req, res) => {
     try {
         const user = await userModel.findById({ _id: req.body.userId });
-        user.password = undefined;
+        // user.password = undefined;
         if (!user) {
             res.status(200).send({
                 message: "user not found",
@@ -258,6 +306,7 @@ const getAllUserAppointmentsController = async (req, res) => {
 module.exports = {
     LoginController,
     RegisterController,
+    UpdateController,
     AuthController,
     ApplyDoctorController,
     getAllNotificationController,
