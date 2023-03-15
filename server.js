@@ -24,11 +24,11 @@ app.use('/api/v1/admin', require('./routes/adminRoutes'));
 app.use('/api/v1/doctor', require('./routes/doctorRoutes'));
 
 // STATIC FILES
-// app.use(express.static(path.join(__dirname, './client/build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, './client/build/index.html'));
-// })
+app.get('*', (req, res) => {
+     res.sendFile(path.join(__dirname, './client/build/index.html'));
+ })
 
 // PORT
 const port = process.env.PORT || 8080
