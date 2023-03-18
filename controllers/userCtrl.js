@@ -256,6 +256,14 @@ const bookAppointmentController = async (req, res) => {
                 message: "Appointment not available for Today"
             })
         }
+        const userAppointmentExists = await appointmentModel.findOne({ userId: req.body.userId, date: req.body.date });
+        if (userAppointmentExists) {
+            return res.status(201).send({
+                success: false,
+                message: "You have an appointment already!",
+                data: userAppointmentExists
+            })
+        }
         const appointment = new appointmentModel(req.body);
         await appointment.save();
         const user = await userModel.findOne({ _id: req.body.doctorInfo.userId });
