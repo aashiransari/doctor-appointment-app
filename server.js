@@ -24,6 +24,7 @@ app.use('/api/v1/admin', require('./routes/adminRoutes'));
 app.use('/api/v1/doctor', require('./routes/doctorRoutes'));
 
 // STATIC FILES
+<<<<<<< HEAD
 if (process.env.NODE_MODE == "production") {
     app.use(express.static(path.join(__dirname, './client/build')));
     app.get('*', (req, res) => {
@@ -34,6 +35,13 @@ if (process.env.NODE_MODE == "production") {
         res.send("API running..")
     })
 }
+=======
+app.use(express.static(path.join(__dirname, './client/build')));
+
+app.get('*', (req, res) => {
+     res.sendFile(path.join(__dirname, './client/build/index.html'));
+ })
+>>>>>>> d2c120dff18089baa18ec4cb60110cdf257b568e
 
 // PORT
 const port = process.env.PORT || 8080
