@@ -13,7 +13,7 @@ router.post('/doctor-info', authMiddleware, getDoctorInfoController)
 router.post('/update-doctor-info', authMiddleware, updateDoctorInfoController)
 
 // GET ALL DOCTORS || GET
-router.get('/get-all-doctors', authMiddleware, getAllDoctorController)
+router.get('/get-all-doctors', getAllDoctorController)
 
 // GET SINGLE DOCTOR || POST
 router.post('/getDoctorById', authMiddleware, getDoctorByIdController)
